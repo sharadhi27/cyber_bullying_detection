@@ -1,0 +1,21 @@
+import pandas as pd
+import re
+import joblib
+import os
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# 1. Load and clean your text data
+df = pd.read_csv("data.csv")
+def clean(text):
+    return re.sub(r"[^a-zA-Z ]", "", str(text).lower())
+cleaned_text = df['tweet_text'].apply(clean)
+
+# 2. Create and train (fit) the TF-IDF Vectorizer
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(cleaned_text)
+
+# 3. Save the TF-IDF Vectorizer to a file
+os.makedirs("model", exist_ok=True)
+joblib.dump(vectorizer, "model/tfidf.pkl")
+
+print("tfidf.pkl has been created successfully!")
